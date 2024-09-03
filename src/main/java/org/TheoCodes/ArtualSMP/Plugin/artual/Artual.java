@@ -22,6 +22,7 @@ public final class Artual extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new CompassTrackerListener(this), this);
         Bukkit.getPluginManager().registerEvents(new EnderChestDropper(this), this);
         // Config and DB
+        saveDefaultConfig();
         saveConfig();
         DBHandler dbHandler = new DBHandler(this);
         dbHandler.setupDatabase();
