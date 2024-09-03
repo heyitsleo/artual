@@ -1,28 +1,52 @@
 package org.TheoCodes.ArtualSMP.Plugin.artual.listeners;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class EnderChestDropper implements Listener {
 
+    private final JavaPlugin plugin;
+
+    public EnderChestDropper(JavaPlugin plugin) {
+        this.plugin = plugin;
+    }
+
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Player player = event.getEntity();
-        World world = player.getWorld();
+        if (plugin.getConfig().getBoolean("enderchest.drop-on-death", true)) {
+            Player player = event.getEntity();
+            Entity killer = player.getKiller();
 
-        // Drop all items from the player's Ender Chest
+            boolean pvpOnly = plugin.getConfig().getBoolean("enderchest.drop-on-pvp-death", true);
+
+            if (pvpOnly && killer != null && killer.getType() == EntityType.PLAYER) {
+                dropEnderChest(player);
+            } else if (!pvpOnly) {
+                dropEnderChest(player);
+            }
+        }
+    }
+
+    private void dropEnderChest(Player player) {
+        Location location = player.getLocation();
+        World world = location.getWorld();
+        if (world == null) return; // Ensure world is not null
+
         for (ItemStack item : player.getEnderChest().getContents()) {
             if (item != null && item.getType() != Material.AIR) {
-                world.dropItemNaturally(player.getLocation(), item);
+                world.dropItemNaturally(location, item);
             }
         }
 
-        // Clear the player's Ender Chest
         player.getEnderChest().clear();
     }
 }

@@ -20,8 +20,9 @@ public final class Artual extends JavaPlugin {
         new CompassCommand(this);
         // Event Listeners
         Bukkit.getPluginManager().registerEvents(new CompassTrackerListener(this), this);
-        Bukkit.getPluginManager().registerEvents(new EnderChestDropper(), this);
-        saveDefaultConfig();
+        Bukkit.getPluginManager().registerEvents(new EnderChestDropper(this), this);
+        // Config and DB
+        saveConfig();
         DBHandler dbHandler = new DBHandler(this);
         dbHandler.setupDatabase();
     }
@@ -33,5 +34,9 @@ public final class Artual extends JavaPlugin {
 
         DBHandler dbHandler = new DBHandler(this);
         dbHandler.close();
+    }
+
+    public CompassTrackerListener getCompassTrackerListener() {
+        return new CompassTrackerListener(this);
     }
 }

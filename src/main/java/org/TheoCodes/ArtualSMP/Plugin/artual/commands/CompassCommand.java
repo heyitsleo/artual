@@ -23,12 +23,7 @@ public class CompassCommand implements CommandExecutor {
             Player player = (Player) sender;
 
             // Give the player a compass
-            ItemStack compass = new ItemStack(Material.COMPASS);
-            ItemMeta meta = compass.getItemMeta();
-            if (meta != null) {
-                meta.setDisplayName("Nearest Player Tracker");
-                compass.setItemMeta(meta);
-            }
+            ItemStack compass = plugin.getCompassTrackerListener().compassItem();
             player.getInventory().addItem(compass);
 
             player.sendMessage("You have been given a tracking compass!");

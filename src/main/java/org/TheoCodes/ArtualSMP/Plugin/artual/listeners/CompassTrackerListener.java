@@ -1,19 +1,22 @@
 package org.TheoCodes.ArtualSMP.Plugin.artual.listeners;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.plugin.Plugin;
+
+import java.sql.Time;
+import java.util.Objects;
 
 public class CompassTrackerListener implements Listener {
 
@@ -23,99 +26,90 @@ public class CompassTrackerListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        startCompassTracking(player);
-    }
-
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        stopCompassTracking(event.getPlayer());
-    }
 
     @EventHandler
     public void onPlayerItemHeld(PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItem(event.getNewSlot());
 
-        if (item != null && item.getType() == Material.COMPASS) {
-            startCompassTracking(player);
-        } else {
-            stopCompassTracking(player);
+        if (item != null && item.getType() == Material.COMPASS && Objects.requireNonNull(item.getItemMeta()).getPersistentDataContainer().has(new NamespacedKey("artual", "tracker"), PersistentDataType.BOOLEAN)) {
+            startTracking(player);
         }
     }
 
-    @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        ItemStack item = player.getInventory().getItemInMainHand();
 
-        if (item != null && item.getType() == Material.COMPASS) {
-            updateCompassTarget(player, item);
+    public ItemStack compassItem() {
+        ItemStack compass = new ItemStack(Material.COMPASS);
+        ItemMeta meta = compass.getItemMeta();
+        if (meta != null) {
+            meta.addEnchant(Enchantment.MENDING, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            meta.getPersistentDataContainer().set(new NamespacedKey("artual", "tracker"), PersistentDataType.BOOLEAN, true);
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Player tracker"));
+            compass.setItemMeta(meta);
         }
+        return compass;
     }
 
-    private void startCompassTracking(Player player) {
+    public void startTracking(Player player) {
+        long refreshRateTicks = (long) (plugin.getConfig().getDouble("tracker.update-interval") * 20);
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (!player.isOnline()) {
+                if (player == null || !player.isOnline()) {
                     this.cancel();
                     return;
                 }
 
-                ItemStack item = player.getInventory().getItemInMainHand();
-                if (item != null && item.getType() == Material.COMPASS) {
-                    updateCompassTarget(player, item);
+                ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
+                if (itemInMainHand == null || itemInMainHand.getType() == Material.AIR || itemInMainHand.getType() != Material.COMPASS) {
+                    this.cancel();
+                    return;
+                }
+
+                ItemMeta itemMeta = itemInMainHand.getItemMeta();
+                if (itemMeta == null || !itemMeta.getPersistentDataContainer().has(new NamespacedKey("artual", "tracker"), PersistentDataType.BOOLEAN)) {
+                    this.cancel();
+                    return;
+                }
+
+                Player nearestPlayer = findNearestPlayer(player);
+                double maxDistance = plugin.getConfig().getInt("tracker.max-distance");
+                if (nearestPlayer != null) {
+                    double distance = player.getLocation().distance(nearestPlayer.getLocation());
+                    if (distance > maxDistance) {
+                        String message = ChatColor.translateAlternateColorCodes('&', "&fNo players nearby.");
+                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                        return;
+                    }
+                    int rounded = (int) (Math.round(distance * 100.0) / 100.0);
+                    String message = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("tracker.text", "&6%target% &8| &6%distance%&7 blocks away")).replace("%target%", nearestPlayer.getName()).replace("%distance%", String.valueOf(rounded));
+                    if (plugin.getConfig().getBoolean("tracker.point-to-target", true)) {
+                        player.setCompassTarget(nearestPlayer.getLocation());
+                    }
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                } else {
+                    String message = ChatColor.translateAlternateColorCodes('&', "&fNo players nearby.");
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Use the stored plugin instance
+        }.runTaskTimer(plugin, 0, refreshRateTicks);
     }
 
-    private void stopCompassTracking(Player player) {
-        Bukkit.getScheduler().cancelTasks(plugin); // Use the stored plugin instance
-    }
-
-    private void updateCompassTarget(Player player, ItemStack compass) {
-        Player nearestPlayer = getNearestPlayer(player);
-
-        if (nearestPlayer != null) {
-            Location playerLoc = player.getLocation();
-            Location targetLoc = nearestPlayer.getLocation();
-
-            player.setCompassTarget(targetLoc);
-
-            int distance = (int) playerLoc.distance(targetLoc);
-
-            ItemMeta meta = compass.getItemMeta();
-            if (meta != null) {
-                meta.setDisplayName("Nearest Player: " + nearestPlayer.getName() + " (" + distance + " blocks away)");
-                compass.setItemMeta(meta);
-            }
-        } else {
-            player.setCompassTarget(player.getWorld().getSpawnLocation());
-            ItemMeta meta = compass.getItemMeta();
-            if (meta != null) {
-                meta.setDisplayName("Nearest Player: None");
-                compass.setItemMeta(meta);
-            }
-        }
-    }
-
-    private Player getNearestPlayer(Player player) {
-        Location playerLocation = player.getLocation();
+    private Player findNearestPlayer(Player player) {
+        double minDistanceSquared = Double.MAX_VALUE;
         Player nearestPlayer = null;
-        double nearestDistance = Double.MAX_VALUE;
+        Location playerLocation = player.getLocation();
 
-        for (Player other : player.getWorld().getPlayers()) {
-            if (other.equals(player)) continue;
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (p.equals(player)) continue;
 
-            double distance = playerLocation.distanceSquared(other.getLocation());
+            Location otherLocation = p.getLocation();
+            double distanceSquared = playerLocation.distanceSquared(otherLocation);
 
-            if (distance < nearestDistance) {
-                nearestDistance = distance;
-                nearestPlayer = other;
+            if (distanceSquared < minDistanceSquared) {
+                minDistanceSquared = distanceSquared;
+                nearestPlayer = p;
             }
         }
 
