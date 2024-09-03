@@ -29,7 +29,7 @@ public final class Artual extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Disabling ArutalSMP+ by &aprodtheo");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Disabling ArtualSMP+ by prodtheo & Harfull");
 
         DBHandler dbHandler = new DBHandler(this);
         dbHandler.close();
