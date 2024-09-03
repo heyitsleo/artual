@@ -4,7 +4,7 @@ Plugin should do the following:
 
 1. Player Tracker ( Done by Theo, Improved by Har )
 2. Ender Chest dropping on Death ( Originally made by Theo, Fixed alot by Har thx )
-3. Claiming Chunks: Players can use the /claim command to claim chunks, with the maximum number of claims set in a configuration file.
+3. Claiming Chunks: Players can use the /claim command to claim chunks, with the maximum number of claims set in a configuration file. Anyone that has been /trusted while the user is in their claim, let them mine normally, for anyone else:
 
 Breaking Blocks in Claimed Chunks:
 
