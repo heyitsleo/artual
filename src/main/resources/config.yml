@@ -1,0 +1,17 @@
+# ===============================
+#     DBHandler Configuration
+# ===============================
+Database:
+  Database-Type: SQLite   # Choose between SQLite, MySQL, or MongoDB
+  MySQL:                  # If using MySQL
+    host: localhost       # MySQL server host
+    user: root            # MySQL user
+    password: ''          # MySQL password
+    database: claims      # MySQL database name
+    port: 3306            # MySQL port
+    max-pool: 15          # Max connection pool size
+    use-ssl: false        # Whether to use SSL for MySQL connections
+  MongoDB:                # If using MongoDB
+    uri: mongodb+srv://<username>:<password>@<cluster-url>/<database>?retryWrites=true&w=majority # MongoDB connection URI
+    database: claims # MongoDB database name
+    collection: data # MongoDB collection name
