@@ -2,6 +2,8 @@ package org.TheoCodes.ArtualSMP.Plugin.artual;
 
 import org.TheoCodes.ArtualSMP.Plugin.artual.claims.database.DBHandler;
 import org.TheoCodes.ArtualSMP.Plugin.artual.claims.database.DBManager;
+import org.TheoCodes.ArtualSMP.Plugin.artual.commands.CompassCommand;
+import org.TheoCodes.ArtualSMP.Plugin.artual.listeners.CompassTrackerListener;
 import org.TheoCodes.ArtualSMP.Plugin.artual.listeners.EnderChestDropper;
 import org.TheoCodes.ArtualSMP.Plugin.artual.commands.TestCommand;
 import org.bukkit.Bukkit;
@@ -13,10 +15,12 @@ public final class Artual extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        Bukkit.getLogger().info("Enabling ArutalSMP+ by &aprodtheo");
+        Bukkit.getLogger().info(ChatColor.GREEN + "Enabling ArtualSMP+ by prodtheo & Harfull");
         new TestCommand(this);
+        new CompassCommand(this);
+        // Event Listeners
+        Bukkit.getPluginManager().registerEvents(new CompassTrackerListener(this), this);
         Bukkit.getPluginManager().registerEvents(new EnderChestDropper(), this);
-
         saveDefaultConfig();
         DBHandler dbHandler = new DBHandler(this);
         dbHandler.setupDatabase();
