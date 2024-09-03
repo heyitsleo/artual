@@ -1,8 +1,10 @@
-# Claim / Raid system for ArtualCM
+# System for ArtualCM's Server
 
 Plugin should do the following:
 
-Claiming Chunks: Players can use the /claim command to claim chunks, with the maximum number of claims set in a configuration file.
+1. Player Tracker ( Done by Theo, Improved by Har )
+2. Ender Chest dropping on Death ( Originally made by Theo, Fixed alot by Har thx )
+3. Claiming Chunks: Players can use the /claim command to claim chunks, with the maximum number of claims set in a configuration file.
 
 Breaking Blocks in Claimed Chunks:
 
