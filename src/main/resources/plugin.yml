@@ -1,0 +1,6 @@
+name: artual
+version: '1.0-BETA'
+main: org.TheoCodes.ArtualSMP.Plugin.artual.Artual
+api-version: '1.21'
+authors: [ prodtheo ]
+description: A plugin powering Artual's SMP.
