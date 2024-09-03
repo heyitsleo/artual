@@ -2,10 +2,13 @@ name: artual
 version: '1.0-BETA'
 main: org.TheoCodes.ArtualSMP.Plugin.artual.Artual
 api-version: '1.21'
-authors: [ prodtheo ]
+authors: [ prodtheo, Harfull ]
 description: A plugin powering Artual's SMP.
 
 commands:
   test:
     description: Testing java
     usage: /test
+  getcompass:
+    description: Get the player tracking compass!
+    usage: /getcompass

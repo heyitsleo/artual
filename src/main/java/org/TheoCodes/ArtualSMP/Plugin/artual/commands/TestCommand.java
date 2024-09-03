@@ -26,7 +26,7 @@ public class TestCommand implements CommandExecutor {
         Player p = (Player) sender;
 
         if (p.hasPermission("test.use")){  // Corrected permission check
-            p.sendMessage("This worked!");
+            p.sendMessage(ChatColor.GREEN + "This worked, your plugin is online!");
             return true;
         } else {
             p.sendMessage(ChatColor.RED + "You lack the permission.");  // Corrected message
