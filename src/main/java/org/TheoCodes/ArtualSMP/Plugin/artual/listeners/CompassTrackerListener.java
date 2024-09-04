@@ -78,7 +78,7 @@ public class CompassTrackerListener implements Listener {
                 if (nearestPlayer != null) {
                     double distance = player.getLocation().distance(nearestPlayer.getLocation());
                     if (distance > maxDistance) {
-                        String message = ChatColor.translateAlternateColorCodes('&', "&fNo players nearby.");
+                        String message = ChatColor.translateAlternateColorCodes('&', "&cNo players nearby.");
                         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
                         return;
                     }
