@@ -89,7 +89,7 @@ public class CompassTrackerListener implements Listener {
                     }
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
                 } else {
-                    String message = ChatColor.translateAlternateColorCodes('&', "&fNo players nearby.");
+                    String message = ChatColor.translateAlternateColorCodes('&', "&cNo players nearby.");
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
                 }
             }
