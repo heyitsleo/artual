@@ -2,8 +2,8 @@
 
 Plugin should do the following:
 
-1. Player Tracker ( Done by Theo, Improved by Har )
-1.5 Player Compass Crafting: Compass Recipie except iron = diamond, restone = redstone block: https://i.imgur.com/QHPc6ws.png
+1. Player Tracker ( Done by Theo, Improved by Har ) //
+1.5 Player Compass Crafting Recipie: https://i.imgur.com/QHPc6ws.png
 
 2. Ender Chest dropping on Death ( Originally made by Theo, Fixed alot by Har thx )
 3. Claiming Chunks: Players can use the /claim command to claim chunks, with the maximum number of claims set in a configuration file. Anyone that has been /trusted while the user is in their claim, let them mine normally, for anyone else:
