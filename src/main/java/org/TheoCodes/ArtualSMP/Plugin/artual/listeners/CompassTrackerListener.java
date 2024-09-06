@@ -43,7 +43,7 @@ public class CompassTrackerListener implements Listener {
             meta.addEnchant(Enchantment.MENDING, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             meta.getPersistentDataContainer().set(new NamespacedKey("artual", "tracker"), PersistentDataType.BOOLEAN, true);
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Player tracker"));
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&eTracker"));
             compass.setItemMeta(meta);
         }
         return compass;
