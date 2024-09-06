@@ -100,7 +100,7 @@ public class CompassTrackerListener implements Listener {
                         return;
                     }
                     int rounded = (int) (Math.round(distance * 100.0) / 100.0);
-                    String message = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("tracker.text", "&6%target% &8| &6%distance%&7 blocks away")).replace("%target%", nearestPlayer.getName()).replace("%distance%", String.valueOf(rounded));
+                    String message = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("tracker.text", "&6%target% &8| &6%distance%&7 blocks")).replace("%target%", nearestPlayer.getName()).replace("%distance%", String.valueOf(rounded));
                     if (plugin.getConfig().getBoolean("tracker.point-to-target", true)) {
                         player.setCompassTarget(nearestPlayer.getLocation());
                     }
