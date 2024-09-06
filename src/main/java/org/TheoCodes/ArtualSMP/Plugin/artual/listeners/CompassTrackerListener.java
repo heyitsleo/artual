@@ -8,14 +8,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.plugin.Plugin;
 
-import java.sql.Time;
 import java.util.Objects;
 
 public class CompassTrackerListener implements Listener {
@@ -24,8 +22,8 @@ public class CompassTrackerListener implements Listener {
 
     public CompassTrackerListener(Plugin plugin) {
         this.plugin = plugin;
+        registerCompassRecipe();  // Register the crafting recipe when this listener is initialized
     }
-
 
     @EventHandler
     public void onPlayerItemHeld(PlayerItemHeldEvent event) {
@@ -37,7 +35,7 @@ public class CompassTrackerListener implements Listener {
         }
     }
 
-
+    // Creates the special "Player tracker" compass
     public ItemStack compassItem() {
         ItemStack compass = new ItemStack(Material.COMPASS);
         ItemMeta meta = compass.getItemMeta();
@@ -49,6 +47,25 @@ public class CompassTrackerListener implements Listener {
             compass.setItemMeta(meta);
         }
         return compass;
+    }
+
+    // Register the custom crafting recipe for the Player Tracker compass
+    private void registerCompassRecipe() {
+        ItemStack compass = compassItem();  // Get the custom compass item
+
+        // Create the NamespacedKey for the recipe
+        NamespacedKey recipeKey = new NamespacedKey(plugin, "player_tracker_compass");
+
+        // Define the crafting recipe (shaped recipe with 3x3 grid)
+        ShapedRecipe compassRecipe = new ShapedRecipe(recipeKey, compass);
+        compassRecipe.shape(" D ", "DRD", " D ");  // Air slots are left as blanks
+
+        // Set ingredients: D (diamond block), R (redstone block)
+        compassRecipe.setIngredient('D', Material.DIAMOND);  // Diamonds
+        compassRecipe.setIngredient('R', Material.REDSTONE_BLOCK);  // Redstone Block
+
+        // Register the recipe
+        Bukkit.addRecipe(compassRecipe);
     }
 
     public void startTracking(Player player) {

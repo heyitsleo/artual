@@ -15,7 +15,7 @@ public final class Artual extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        Bukkit.getLogger().info(ChatColor.GREEN + "Enabling ArtualSMP+ by prodtheo & Harfull");
+        Bukkit.getLogger().info(ChatColor.GREEN + "(✔) Enabling ArtualSMP+ by prodtheo & Harfull");
         new TestCommand(this);
         new CompassCommand(this);
         // Event Listeners
@@ -31,7 +31,7 @@ public final class Artual extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Disabling ArtualSMP+ by prodtheo & Harfull");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "(✘) Disabling ArtualSMP+ by prodtheo & Harfull");
 
         DBHandler dbHandler = new DBHandler(this);
         dbHandler.close();

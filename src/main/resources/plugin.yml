@@ -1,5 +1,5 @@
-name: artual
-version: '1.0-BETA'
+name: ArtualCore
+version: '2.0.5'
 main: org.TheoCodes.ArtualSMP.Plugin.artual.Artual
 api-version: '1.21'
 authors: [ prodtheo, Harfull ]

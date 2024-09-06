@@ -19,17 +19,17 @@ public class TestCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)){
-            sender.sendMessage("Only players can execute this command.");
+            sender.sendMessage(ChatColor.RED + "(✘) This command can only be run by players.");
             return true;
         }
 
         Player p = (Player) sender;
 
-        if (p.hasPermission("test.use")){  // Corrected permission check
-            p.sendMessage(ChatColor.GREEN + "This worked, your plugin is online!");
+        if (p.hasPermission("artual.test")){  // Corrected permission check
+            p.sendMessage(ChatColor.GREEN + "(✔) Registered this command. Ran into issues? Contact", ChatColor.YELLOW + "prodtheo", ChatColor.GREEN + "or", ChatColor.YELLOW + "Harfull");
             return true;
         } else {
-            p.sendMessage(ChatColor.RED + "You lack the permission.");  // Corrected message
+            p.sendMessage(ChatColor.RED + "(✘) You lack permissions to use this command.");  // Corrected message
         }
         return false;
     }
