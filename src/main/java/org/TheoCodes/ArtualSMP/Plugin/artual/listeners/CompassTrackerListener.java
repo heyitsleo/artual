@@ -43,7 +43,7 @@ public class CompassTrackerListener implements Listener {
             meta.addEnchant(Enchantment.MENDING, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             meta.getPersistentDataContainer().set(new NamespacedKey("artual", "tracker"), PersistentDataType.BOOLEAN, true);
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Player Tracker"));
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Tracker"));
             compass.setItemMeta(meta);
         }
         return compass;
@@ -63,7 +63,7 @@ public class CompassTrackerListener implements Listener {
         compassRecipe.shape(" D ", "DRD", " D ");  // Crafting shape with air in between
 
         // Set ingredients: D (diamond block), R (redstone block)
-        compassRecipe.setIngredient('D', Material.DIAMOND_BLOCK);  // Diamond block
+        compassRecipe.setIngredient('D', Material.DIAMOND);  // Diamond (not block)
         compassRecipe.setIngredient('R', Material.REDSTONE_BLOCK);  // Redstone block
 
         // Register the recipe
@@ -103,7 +103,7 @@ public class CompassTrackerListener implements Listener {
                         return;
                     }
                     int rounded = (int) (Math.round(distance * 100.0) / 100.0);
-                    String message = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("tracker.text", "&6%target% &8| &6%distance%&7 blocks away.")).replace("%target%", nearestPlayer.getName()).replace("%distance%", String.valueOf(rounded));
+                    String message = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("tracker.text", "&6%target% &8| &6%distance%&7 blocks")).replace("%target%", nearestPlayer.getName()).replace("%distance%", String.valueOf(rounded));
                     if (plugin.getConfig().getBoolean("tracker.point-to-target", true)) {
                         player.setCompassTarget(nearestPlayer.getLocation());
                     }
