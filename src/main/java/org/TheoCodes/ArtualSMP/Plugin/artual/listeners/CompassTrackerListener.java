@@ -53,23 +53,21 @@ public class CompassTrackerListener implements Listener {
     private void registerCompassRecipe() {
         NamespacedKey recipeKey = new NamespacedKey(plugin, "player_tracker_compass");
 
-        // Check if the recipe is already registered
-        if (Bukkit.getRecipe(recipeKey) == null) {
-            ItemStack compass = compassItem();  // Get the custom compass item
+        // Delete old recipe to avoid conflicts
+        Bukkit.removeRecipe(recipeKey);
 
-            // Define the crafting recipe (shaped recipe with 3x3 grid)
-            ShapedRecipe compassRecipe = new ShapedRecipe(recipeKey, compass);
-            compassRecipe.shape(" D ", "DRD", " D ");  // Crafting shape with air in between
+        ItemStack compass = compassItem();  // Get the custom compass item
 
-            // Set ingredients: D (diamond block), R (redstone block)
-            compassRecipe.setIngredient('D', Material.DIAMOND_BLOCK);  // Diamond block
-            compassRecipe.setIngredient('R', Material.REDSTONE_BLOCK);  // Redstone block
+        // Define the crafting recipe (shaped recipe with 3x3 grid)
+        ShapedRecipe compassRecipe = new ShapedRecipe(recipeKey, compass);
+        compassRecipe.shape(" D ", "DRD", " D ");  // Crafting shape with air in between
 
-            // Register the recipe
-            Bukkit.addRecipe(compassRecipe);
-        } else {
-            plugin.getLogger().info("Player tracker recipe already registered, skipping...");
-        }
+        // Set ingredients: D (diamond block), R (redstone block)
+        compassRecipe.setIngredient('D', Material.DIAMOND_BLOCK);  // Diamond block
+        compassRecipe.setIngredient('R', Material.REDSTONE_BLOCK);  // Redstone block
+
+        // Register the recipe
+        Bukkit.addRecipe(compassRecipe);
     }
 
 
