@@ -62,7 +62,7 @@ public class CompassTrackerListener implements Listener {
             compassRecipe.shape(" D ", "DRD", " D ");  // Crafting shape with air in between
 
             // Set ingredients: D (diamond block), R (redstone block)
-            compassRecipe.setIngredient('D', Material.DIAMOND_BLOCK);  // Diamond block
+            compassRecipe.setIngredient('D', Material.DIAMOND);  // Diamond
             compassRecipe.setIngredient('R', Material.REDSTONE_BLOCK);  // Redstone block
 
             // Register the recipe
