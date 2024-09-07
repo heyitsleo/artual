@@ -43,7 +43,7 @@ public class CompassTrackerListener implements Listener {
             meta.addEnchant(Enchantment.MENDING, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             meta.getPersistentDataContainer().set(new NamespacedKey("artual", "tracker"), PersistentDataType.BOOLEAN, true);
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&eTracker"));
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Player Tracker"));
             compass.setItemMeta(meta);
         }
         return compass;
@@ -51,22 +51,27 @@ public class CompassTrackerListener implements Listener {
 
     // Register the custom crafting recipe for the Player Tracker compass
     private void registerCompassRecipe() {
-        ItemStack compass = compassItem();  // Get the custom compass item
-
-        // Create the NamespacedKey for the recipe
         NamespacedKey recipeKey = new NamespacedKey(plugin, "player_tracker_compass");
 
-        // Define the crafting recipe (shaped recipe with 3x3 grid)
-        ShapedRecipe compassRecipe = new ShapedRecipe(recipeKey, compass);
-        compassRecipe.shape(" D ", "DRD", " D ");  // Air slots are left as blanks
+        // Check if the recipe is already registered
+        if (Bukkit.getRecipe(recipeKey) == null) {
+            ItemStack compass = compassItem();  // Get the custom compass item
 
-        // Set ingredients: D (diamond block), R (redstone block)
-        compassRecipe.setIngredient('D', Material.DIAMOND);  // Diamonds
-        compassRecipe.setIngredient('R', Material.REDSTONE_BLOCK);  // Redstone Block
+            // Define the crafting recipe (shaped recipe with 3x3 grid)
+            ShapedRecipe compassRecipe = new ShapedRecipe(recipeKey, compass);
+            compassRecipe.shape(" D ", "DRD", " D ");  // Crafting shape with air in between
 
-        // Register the recipe
-        Bukkit.addRecipe(compassRecipe);
+            // Set ingredients: D (diamond block), R (redstone block)
+            compassRecipe.setIngredient('D', Material.DIAMOND_BLOCK);  // Diamond block
+            compassRecipe.setIngredient('R', Material.REDSTONE_BLOCK);  // Redstone block
+
+            // Register the recipe
+            Bukkit.addRecipe(compassRecipe);
+        } else {
+            plugin.getLogger().info("Player tracker recipe already registered, skipping...");
+        }
     }
+
 
     public void startTracking(Player player) {
         long refreshRateTicks = (long) (plugin.getConfig().getDouble("tracker.update-interval") * 20);
@@ -100,7 +105,7 @@ public class CompassTrackerListener implements Listener {
                         return;
                     }
                     int rounded = (int) (Math.round(distance * 100.0) / 100.0);
-                    String message = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("tracker.text", "&6%target% &8| &6%distance%&7 blocks")).replace("%target%", nearestPlayer.getName()).replace("%distance%", String.valueOf(rounded));
+                    String message = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("tracker.text", "&6%target% &8| &6%distance%&7 blocks away.")).replace("%target%", nearestPlayer.getName()).replace("%distance%", String.valueOf(rounded));
                     if (plugin.getConfig().getBoolean("tracker.point-to-target", true)) {
                         player.setCompassTarget(nearestPlayer.getLocation());
                     }

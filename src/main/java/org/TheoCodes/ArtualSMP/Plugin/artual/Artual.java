@@ -3,6 +3,7 @@ package org.TheoCodes.ArtualSMP.Plugin.artual;
 import org.TheoCodes.ArtualSMP.Plugin.artual.claims.database.DBHandler;
 import org.TheoCodes.ArtualSMP.Plugin.artual.claims.database.DBManager;
 import org.TheoCodes.ArtualSMP.Plugin.artual.commands.CompassCommand;
+import org.TheoCodes.ArtualSMP.Plugin.artual.commands.ReloadCommand;
 import org.TheoCodes.ArtualSMP.Plugin.artual.listeners.CompassTrackerListener;
 import org.TheoCodes.ArtualSMP.Plugin.artual.listeners.EnderChestDropper;
 import org.TheoCodes.ArtualSMP.Plugin.artual.commands.TestCommand;
@@ -18,6 +19,7 @@ public final class Artual extends JavaPlugin {
         Bukkit.getLogger().info(ChatColor.GREEN + "(✔) Enabling ArtualSMP+ by prodtheo & Harfull");
         new TestCommand(this);
         new CompassCommand(this);
+        new ReloadCommand(this);
         // Event Listeners
         Bukkit.getPluginManager().registerEvents(new CompassTrackerListener(this), this);
         Bukkit.getPluginManager().registerEvents(new EnderChestDropper(this), this);

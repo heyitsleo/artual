@@ -1,5 +1,5 @@
 name: ArtualCore
-version: '2.0.5'
+version: '2.0.9'
 main: org.TheoCodes.ArtualSMP.Plugin.artual.Artual
 api-version: '1.21'
 authors: [ prodtheo, Harfull ]
@@ -7,8 +7,17 @@ description: A plugin powering Artual's SMP.
 
 commands:
   test:
-    description: Testing java
+    description: (DEV) Test the functionality of the plugin.
     usage: /test
   getcompass:
-    description: Get the player tracking compass!
+    description: (DEV) Get the player tracker for testing.
     usage: /getcompass
+  reloadconfig:
+    description: (DEV) Reload the configuration of the plugin.
+    usage: /reloadconfig
+    permission: artual.reload
+
+permissions:
+  artual.reload:
+    description: Lets the user with the permission reload the config.yml
+    default: op

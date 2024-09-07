@@ -26,7 +26,7 @@ public class TestCommand implements CommandExecutor {
         Player p = (Player) sender;
 
         if (p.hasPermission("artual.test")){  // Corrected permission check
-            p.sendMessage(ChatColor.GREEN + "(✔) Registered this command. Ran into issues? Contact", ChatColor.YELLOW + "prodtheo", ChatColor.GREEN + "or", ChatColor.YELLOW + "Harfull");
+            p.sendMessage(ChatColor.GREEN + "(✔) Registered this command. Ran into issues?");
             return true;
         } else {
             p.sendMessage(ChatColor.RED + "(✘) You lack permissions to use this command.");  // Corrected message
