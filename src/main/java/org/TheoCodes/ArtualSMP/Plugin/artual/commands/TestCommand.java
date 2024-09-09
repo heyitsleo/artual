@@ -7,6 +7,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+// Test command, if this works you broke something
+
 public class TestCommand implements CommandExecutor {
 
     private Artual plugin;
