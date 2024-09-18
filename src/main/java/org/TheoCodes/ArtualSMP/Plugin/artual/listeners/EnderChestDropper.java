@@ -26,7 +26,7 @@ public class EnderChestDropper implements Listener {
             Player player = event.getEntity();
             Entity killer = player.getKiller();
 
-            boolean pvpOnly = plugin.getConfig().getBoolean("enderchest.drop-on-pvp-death", true);
+            boolean pvpOnly = plugin.getConfig().getBoolean("enderchest.drop-on-pvp", true);
 
             if (pvpOnly && killer != null && killer.getType() == EntityType.PLAYER) {
                 dropEnderChest(player);
