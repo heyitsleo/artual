@@ -28,7 +28,7 @@ public class ReloadCommand implements CommandExecutor {
 
         // Reload the config file
         plugin.reloadConfig();
-        sender.sendMessage(ChatColor.GREEN + "(✔) Configuration has been reloaded.");
+        sender.sendMessage(ChatColor.GREEN + "(✔) Configuration has reloaded.");
 
         // Play a sound effect for the player if valid
         if (sender instanceof Player) {

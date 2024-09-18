@@ -2,13 +2,11 @@ package org.TheoCodes.ArtualSMP.Plugin.artual.commands;
 
 import org.TheoCodes.ArtualSMP.Plugin.artual.Artual;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 // Player compass tracker I think its straight forward
 
@@ -27,12 +25,12 @@ public class CompassCommand implements CommandExecutor {
             Player player = (Player) sender; // Check if the executor is a player
 
             // Check if the player has the required permission
-            if (player.hasPermission("artual.compass")) {
+            if (player.hasPermission("artual.getcompass")) {
                 // Give the player a compass
                 ItemStack compass = plugin.getCompassTrackerListener().compassItem();
                 player.getInventory().addItem(compass);
 
-                player.sendMessage(ChatColor.GREEN + "(✔) You have been given a tracking compass!"); // Send a verified message
+                player.sendMessage(ChatColor.GREEN + "(✔) Gave you a tracking compass!"); // Send a verified message
             } else {
                 player.sendMessage(ChatColor.RED + "(✘) You lack permissions to use this command."); // Send error message permissions lacking wise
             }

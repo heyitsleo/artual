@@ -10,7 +10,7 @@ tracker:
   max-distance: 500 # The max distance the compass should work.
   point-to-target: true # Whether the compass should point to the target rather than just showing the distance.
   update-interval: 1 # The interval in seconds to update the compass.
-  text: '&6%target% &8| &6%distance% &7blocks away.' # The action bar text when tracking a player.
+  text: '&c%target% &8| &c%distance% &7blocks' # The action bar text when tracking a player.
 
 
 # ===============================
