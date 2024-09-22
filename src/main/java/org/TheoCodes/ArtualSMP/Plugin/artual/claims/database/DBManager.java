@@ -50,8 +50,6 @@ public class DBManager {
             pstmt.setString(2, ownerUUID.toString());
             pstmt.setString(3, loc1String);
             pstmt.setString(4, loc2String);
-            pstmt.setString(5, loc1String);
-            pstmt.setString(6, loc2String);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             plugin.getLogger().severe("Failed to make claim: " + e.getMessage());
