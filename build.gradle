@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group = 'org.TheoCodes.ArtualSMP.Plugin'
@@ -37,7 +38,7 @@ java {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-
+    options.compilerArgs << "-Xlint:deprecation"
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
         options.release.set(targetJavaVersion)
     }
@@ -51,3 +52,10 @@ processResources {
         expand props
     }
 }
+
+shadowJar {
+    archiveClassifier.set('')
+    mergeServiceFiles()
+}
+
+build.dependsOn shadowJar

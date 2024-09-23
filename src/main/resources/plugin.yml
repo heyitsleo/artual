@@ -16,6 +16,9 @@ commands:
     description: (DEV) Reload the configuration of the plugin.
     usage: /reloadconfig
     permission: artual.reload
+  chunk:
+    description: (PLAYER) Use the chunk claiming tools/
+    usage: /chunk <claim|delete|info>
 
 permissions:
   artual.reload:

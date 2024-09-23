@@ -12,6 +12,10 @@ tracker:
   update-interval: 1 # The interval in seconds to update the compass.
   text: '&c%target% &8| &c%distance% &7blocks' # The action bar text when tracking a player.
 
+double-gaps: true
+
+extended-t2-strength: true
+
 
 # ===============================
 #     Database Configuration
