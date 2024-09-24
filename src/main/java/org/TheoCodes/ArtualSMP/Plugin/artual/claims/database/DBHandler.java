@@ -3,6 +3,7 @@ package org.TheoCodes.ArtualSMP.Plugin.artual.claims.database;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.plugin.java.JavaPlugin;
+import java.io.File;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -22,8 +23,15 @@ public class DBHandler {
     }
 
     private void setupSQLite() {
+        File dataFolder = plugin.getDataFolder();
+        if (!dataFolder.exists()) {
+            dataFolder.mkdirs();
+        }
+
+        File dbFile = new File(dataFolder, "claimsData.db");
+
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:sqlite:" + plugin.getDataFolder() + "/claimsData.db");
+        config.setJdbcUrl("jdbc:sqlite:" + dbFile.getAbsolutePath());
         config.setConnectionTestQuery("SELECT 1");
         config.setMaximumPoolSize(1);
         config.setPoolName("SQLitePool");

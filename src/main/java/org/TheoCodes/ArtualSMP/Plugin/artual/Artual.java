@@ -11,8 +11,10 @@ import org.TheoCodes.ArtualSMP.Plugin.artual.listeners.CompassTrackerListener;
 import org.TheoCodes.ArtualSMP.Plugin.artual.listeners.CraftListener;
 import org.TheoCodes.ArtualSMP.Plugin.artual.listeners.EnderChestDropper;
 import org.TheoCodes.ArtualSMP.Plugin.artual.commands.TestCommand;
+import org.TheoCodes.ArtualSMP.Plugin.artual.Artual;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -69,6 +71,7 @@ public final class Artual extends JavaPlugin {
                 new RaidListener(this)
         ).forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
     }
+
 
     public CompassTrackerListener getCompassTrackerListener() {
         return new CompassTrackerListener(this);
