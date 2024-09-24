@@ -31,11 +31,10 @@ public class ClaimManager {
 
         dbManager.makeClaim(player.getUniqueId(), chunk);
 
-        // Get chunk coordinates
+        // Get chunk coordinates for List?
         int chunkX = chunk.getX();
         int chunkZ = chunk.getZ();
 
-        // Include coordinates in the success message
         player.sendMessage(artual.color("&a(✔) You have claimed this chunk!"));
     }
 
