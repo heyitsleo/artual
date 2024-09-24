@@ -1,8 +1,7 @@
 package org.TheoCodes.ArtualSMP.Plugin.artual.claims.database;
 
-import com.mongodb.client.model.UpdateOptions;
-import org.bson.Document;
-import org.bukkit.Location;
+import org.bukkit.Chunk;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
@@ -39,81 +38,60 @@ public class DBManager {
         return claims;
     }
 
-    public void makeClaim(UUID ownerUUID, Location loc1, Location loc2) {
-        String claimID = generateClaimID(ownerUUID); // Generate a unique claim ID
-        String loc1String = locationToString(loc1);
-        String loc2String = locationToString(loc2);
+    public void makeClaim(UUID ownerUUID, Chunk chunk) {
+        String claimID = UUID.randomUUID().toString();
+        String chunkID = getChunkID(chunk);
 
         try (Connection conn = dbHandler.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Claims (ID, OwnerUUID, Location1, Location2) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE Location1 = ?, Location2 = ?")) {
+             PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Claims (ID, OwnerUUID, ChunkID) VALUES (?, ?, ?)")) {
             pstmt.setString(1, claimID);
             pstmt.setString(2, ownerUUID.toString());
-            pstmt.setString(3, loc1String);
-            pstmt.setString(4, loc2String);
-            pstmt.setString(5, loc1String);
-            pstmt.setString(6, loc2String);
+            pstmt.setString(3, chunkID);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             plugin.getLogger().severe("Failed to make claim: " + e.getMessage());
         }
     }
 
-    public void addTrusted(String claimID, UUID playerUUID) {
-        try {
-            if (dbHandler.getClaimsCollection() != null) {
-                dbHandler.getTrustedCollection().updateOne(
-                        new Document("ClaimID", claimID).append("TrustedUUID", playerUUID.toString()),
-                        new Document("$set", new Document("TrustedUUID", playerUUID.toString())),
-                        new UpdateOptions().upsert(true)
-                );
-            } else {
-                try (Connection conn = dbHandler.getConnection();
-                     PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Trusted (ClaimID, TrustedUUID) VALUES (?, ?)")) {
-                    pstmt.setString(1, claimID);
-                    pstmt.setString(2, playerUUID.toString());
-                    pstmt.executeUpdate();
-                }
-            }
+    public void deleteClaim(String claimID) {
+        try (Connection conn = dbHandler.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement("DELETE FROM Claims WHERE ID = ?")) {
+            pstmt.setString(1, claimID);
+            pstmt.executeUpdate();
         } catch (SQLException e) {
-            plugin.getLogger().severe("Failed to add trusted player: " + e.getMessage());
+            plugin.getLogger().severe("Failed to delete claim: " + e.getMessage());
         }
     }
 
-    public List<UUID> getTrusted(String claimID) {
-        List<UUID> trusted = new ArrayList<>();
-        try {
-            if (dbHandler.getClaimsCollection() != null) {
-                for (Document doc : dbHandler.getTrustedCollection().find(new Document("ClaimID", claimID))) {
-                    trusted.add(UUID.fromString(doc.getString("TrustedUUID")));
-                }
-            } else {
-                try (Connection conn = dbHandler.getConnection();
-                     PreparedStatement pstmt = conn.prepareStatement("SELECT TrustedUUID FROM Trusted WHERE ClaimID = ?")) {
-                    pstmt.setString(1, claimID);
-                    try (ResultSet rs = pstmt.executeQuery()) {
-                        while (rs.next()) {
-                            trusted.add(UUID.fromString(rs.getString("TrustedUUID")));
-                        }
-                    }
+    public boolean checkClaimed(String chunkID) {
+        try (Connection conn = dbHandler.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement("SELECT ID FROM Claims WHERE ChunkID = ?")) {
+            pstmt.setString(1, chunkID);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Failed to check claim: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public Player getClaimOwner(String chunkID) {
+        try (Connection conn = dbHandler.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement("SELECT OwnerUUID FROM Claims WHERE ChunkID = ?")) {
+            pstmt.setString(1, chunkID);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return plugin.getServer().getPlayer(UUID.fromString(rs.getString("OwnerUUID")));
                 }
             }
         } catch (SQLException e) {
-            plugin.getLogger().severe("Failed to get trusted players: " + e.getMessage());
+            plugin.getLogger().severe("Failed to get claim owner: " + e.getMessage());
         }
-        return trusted;
+        return null;
     }
 
-    private String generateClaimID(UUID ownerUUID) { // claim id system i made
-        return UUID.randomUUID().toString();
-    }
-
-    private String locationToString(Location location) {
-        return String.format("%s,%s,%s,%s,%s,%s",
-                location.getWorld().getName(), location.getX(), location.getY(), location.getZ(),
-                location.getPitch(), location.getYaw());
-    }
-
-    public void close() {
-        dbHandler.close();
+    private String getChunkID(Chunk chunk) {
+        return chunk.getWorld().getName() + "-" + chunk.getX() + "-" + chunk.getZ();
     }
 }

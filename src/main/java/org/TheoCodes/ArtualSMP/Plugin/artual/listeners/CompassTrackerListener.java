@@ -43,7 +43,7 @@ public class CompassTrackerListener implements Listener {
             meta.addEnchant(Enchantment.MENDING, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             meta.getPersistentDataContainer().set(new NamespacedKey("artual", "tracker"), PersistentDataType.BOOLEAN, true);
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Tracker"));
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Player Tracker"));
             compass.setItemMeta(meta);
         }
         return compass;
@@ -63,8 +63,8 @@ public class CompassTrackerListener implements Listener {
         compassRecipe.shape(" D ", "DRD", " D ");  // Crafting shape with air in between
 
         // Set ingredients: D (diamond), R (redstone block)
-        compassRecipe.setIngredient('D', Material.DIAMOND);  // Diamond (not block)
-        compassRecipe.setIngredient('R', Material.REDSTONE_BLOCK);  // Redstone block
+        compassRecipe.setIngredient('D', Material.DIAMOND);  // Diamond (Not Block)
+        compassRecipe.setIngredient('R', Material.REDSTONE_BLOCK);  // Block of Redstone
 
         // Register the recipe
         Bukkit.addRecipe(compassRecipe);
@@ -96,14 +96,14 @@ public class CompassTrackerListener implements Listener {
                 Player nearestPlayer = findNearestPlayer(player);
                 double maxDistance = plugin.getConfig().getInt("tracker.max-distance");
                 if (nearestPlayer != null) {
-                    double distance = player.getLocation().distance(nearestPlayer.getLocation());
+                    double distance = player.getLocation().distanceSquared(nearestPlayer.getLocation());
                     if (distance > maxDistance) {
                         String message = ChatColor.translateAlternateColorCodes('&', "&cNo players nearby.");
                         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
                         return;
                     }
                     int rounded = (int) (Math.round(distance * 100.0) / 100.0);
-                    String message = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("tracker.text", "&6%target% &8| &6%distance%&7 blocks")).replace("%target%", nearestPlayer.getName()).replace("%distance%", String.valueOf(rounded));
+                    String message = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("tracker.text", "&6%target% &8| &6%distance%&7 blocks away.")).replace("%target%", nearestPlayer.getName()).replace("%distance%", String.valueOf(rounded));
                     if (plugin.getConfig().getBoolean("tracker.point-to-target", true)) {
                         player.setCompassTarget(nearestPlayer.getLocation());
                     }
