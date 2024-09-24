@@ -1,9 +1,9 @@
 name: ArtualCore
-version: '2.1.5'
+version: '2.0.9'
 main: org.TheoCodes.ArtualSMP.Plugin.artual.Artual
 api-version: '1.21'
-authors: [ prodtheo, Harfull, ChatGPT ]
-description: A plugin powering Artual's Private SMP.
+authors: [ prodtheo, Harfull ]
+description: A plugin powering Artual's SMP.
 
 commands:
   test:
@@ -17,7 +17,7 @@ commands:
     usage: /reloadconfig
     permission: artual.reload
   chunk:
-    description: (PLAYER) Use the chunk claiming tools.
+    description: (PLAYER) Use the chunk claiming tools/
     usage: /chunk <claim|delete|info>
 
 permissions:

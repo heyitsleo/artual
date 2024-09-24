@@ -22,7 +22,7 @@ import java.util.Objects;
 
 public class BrewListener implements Listener {
 
-    // This is done in a new plugin.
+    // This is WIP so will be used later
 
     private JavaPlugin plugin;
 

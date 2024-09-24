@@ -25,20 +25,12 @@ public class ClaimManager {
         String chunkID = getChunkID(chunk);
 
         if (isClaimed(chunkID)) {
-            player.sendMessage(artual.color("&c(✘) This chunk is already claimed! Try again."));
+            player.sendMessage(artual.color("&6&lClaims &7» &fThis chunk is already claimed!"));
             return;
         }
-
         dbManager.makeClaim(player.getUniqueId(), chunk);
-
-        // Get chunk coordinates
-        int chunkX = chunk.getX();
-        int chunkZ = chunk.getZ();
-
-        // Include coordinates in the success message
-        player.sendMessage(artual.color("&a(✔) You have claimed this chunk!"));
+        player.sendMessage(artual.color("&6&lClaims &7» &fYou have successfully claimed this chunk!"));
     }
-
 
     public boolean isClaimed(String chunkID) {
         return dbManager.checkClaimed(chunkID);
