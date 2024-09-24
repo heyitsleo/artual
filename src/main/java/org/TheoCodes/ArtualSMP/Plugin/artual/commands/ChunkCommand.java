@@ -2,6 +2,7 @@ package org.TheoCodes.ArtualSMP.Plugin.artual.commands;
 
 import org.TheoCodes.ArtualSMP.Plugin.artual.Artual;
 import org.TheoCodes.ArtualSMP.Plugin.artual.claims.ClaimManager;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,7 +25,7 @@ public class ChunkCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         if (!(commandSender instanceof Player)) {
-            commandSender.sendMessage("This command can only be used by players.");
+            commandSender.sendMessage(ChatColor.RED + "(✘) This command can only be used by players.");
             return true;
         }
 
@@ -43,7 +44,10 @@ public class ChunkCommand implements CommandExecutor {
                     claimManager.attemptClaim(player);
                     return true;
                 case "delete":
-                    player.sendMessage(artual.color("&6&lClaims &7» &fcoming soon.")); // &c&o&m&i&n&g &s&o&o&n
+                    player.sendMessage(artual.color("&6&lClaims &7» &fComing soon.")); // &c&o&m&i&n&g &s&o&o&n
+                    return true;
+                case "list":
+                    player.sendMessage(artual.color("&6&lClaims &7» &fComing soon."));
                     return true;
                 default:
                     sendUsage(player);

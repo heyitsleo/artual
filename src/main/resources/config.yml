@@ -4,7 +4,7 @@
 
 enderchest:
   drop-on-death: true # Whether to drop the enderchest on death
-  drop-on-pvp: false   # Whether to only drop the enderchest if the player was killed by a player
+  drop-on-pvp: true   # Whether to drop the enderchest if PvP
 
 tracker:
   max-distance: 500 # The max distance the compass should work.
@@ -12,9 +12,9 @@ tracker:
   update-interval: 1 # The interval in seconds to update the compass.
   text: '&c%target% &8| &c%distance% &7blocks' # The action bar text when tracking a player.
 
-double-gaps: true
+double-gaps: false
 
-extended-t2-strength: true
+extended-t2-strength: false
 
 
 # ===============================
