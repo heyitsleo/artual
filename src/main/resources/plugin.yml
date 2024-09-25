@@ -1,5 +1,5 @@
 name: ArtualCore
-version: '2.1.5'
+version: '2.2.3'
 main: org.TheoCodes.ArtualSMP.Plugin.artual.Artual
 api-version: '1.19'
 authors: [ prodtheo, Harfull, ChatGPT ]
