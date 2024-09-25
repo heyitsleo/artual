@@ -3,6 +3,7 @@ package org.TheoCodes.ArtualSMP.Plugin.artual.claims;
 import org.TheoCodes.ArtualSMP.Plugin.artual.Artual;
 import org.TheoCodes.ArtualSMP.Plugin.artual.claims.database.DBManager;
 import org.bukkit.Chunk;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -70,6 +71,19 @@ public class ClaimManager {
 
     public Player getClaimOwner(Chunk chunk) {
         String chunkID = getChunkID(chunk);
-        return dbManager.getClaimOwner(chunkID);
+        Player owner = dbManager.getClaimOwner(chunkID);
+        if (owner != null) {
+            return owner;
+        }
+        return null;
+    }
+
+    public OfflinePlayer getOfflineClaimOwner(Chunk chunk) {
+        String chunkID = getChunkID(chunk);
+        OfflinePlayer owner = dbManager.getClaimOwnerOffline(chunkID);
+        if (owner != null) {
+            return owner;
+        }
+        return null;
     }
 }

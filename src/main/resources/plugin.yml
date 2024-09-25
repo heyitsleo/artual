@@ -1,7 +1,7 @@
 name: ArtualCore
 version: '2.1.5'
 main: org.TheoCodes.ArtualSMP.Plugin.artual.Artual
-api-version: '1.21'
+api-version: '1.19'
 authors: [ prodtheo, Harfull, ChatGPT ]
 description: Private plugin powering ArtualCM's SMP.
 

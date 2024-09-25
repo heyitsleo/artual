@@ -18,6 +18,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.swing.*;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Optional;
@@ -53,6 +54,9 @@ public final class Artual extends JavaPlugin {
 
         DBHandler dbHandler = new DBHandler(this);
         dbHandler.close();
+
+        RaidListener raidListener = new RaidListener(this);
+        raidListener.disableMethod();
     }
 
     private void registerCommands() {

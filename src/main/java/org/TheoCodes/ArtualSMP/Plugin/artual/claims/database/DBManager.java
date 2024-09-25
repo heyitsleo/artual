@@ -1,6 +1,7 @@
 package org.TheoCodes.ArtualSMP.Plugin.artual.claims.database;
 
 import org.bukkit.Chunk;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -83,6 +84,21 @@ public class DBManager {
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     return plugin.getServer().getPlayer(UUID.fromString(rs.getString("OwnerUUID")));
+                }
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Failed to get claim owner: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public OfflinePlayer getClaimOwnerOffline(String chunkID) {
+        try (Connection conn = dbHandler.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement("SELECT OwnerUUID FROM Claims WHERE ChunkID = ?")) {
+            pstmt.setString(1, chunkID);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return plugin.getServer().getOfflinePlayer(UUID.fromString(rs.getString("OwnerUUID")));
                 }
             }
         } catch (SQLException e) {
