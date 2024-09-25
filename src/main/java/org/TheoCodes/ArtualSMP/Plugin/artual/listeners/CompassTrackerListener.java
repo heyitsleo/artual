@@ -96,7 +96,7 @@ public class CompassTrackerListener implements Listener {
                 Player nearestPlayer = findNearestPlayer(player);
                 double maxDistance = plugin.getConfig().getInt("tracker.max-distance");
                 if (nearestPlayer != null) {
-                    double distance = player.getLocation().distanceSquared(nearestPlayer.getLocation());
+                    double distance = player.getLocation().distance(nearestPlayer.getLocation());
                     if (distance > maxDistance) {
                         String message = ChatColor.translateAlternateColorCodes('&', "&cNo players nearby.");
                         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
