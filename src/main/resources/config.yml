@@ -12,7 +12,12 @@ tracker:
   update-interval: 1 # The interval in seconds to update the compass.
   text: '&c%target% &8| &c%distance% &7blocks' # The action bar text when tracking a player.
 
-double-gaps: false
+ancient-debris:
+  enabled: true
+  minimum-scrap: 1
+  maximum-scrap: 3
+
+double-gaps: true # Whether to allow double gaps crafting.
 
 extended-t2-strength: false
 

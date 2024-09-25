@@ -1,6 +1,6 @@
 package org.TheoCodes.ArtualSMP.Plugin.artual.claims;
 
 public enum RaidStatus {
-    BREAKING,
+    NOT_RAIDING,
     RAIDING
 }

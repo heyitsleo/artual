@@ -9,6 +9,8 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.UUID;
+
 public class ClaimManager {
 
     private JavaPlugin plugin;
@@ -83,6 +85,15 @@ public class ClaimManager {
         OfflinePlayer owner = dbManager.getClaimOwnerOffline(chunkID);
         if (owner != null) {
             return owner;
+        }
+        return null;
+    }
+
+    public UUID getClaimOwnerUUID(Chunk chunk) {
+        String chunkID = getChunkID(chunk);
+        OfflinePlayer owner = dbManager.getClaimOwnerOffline(chunkID);
+        if (owner != null) {
+            return owner.getUniqueId();
         }
         return null;
     }

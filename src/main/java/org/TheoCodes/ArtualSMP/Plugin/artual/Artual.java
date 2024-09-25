@@ -6,10 +6,7 @@ import org.TheoCodes.ArtualSMP.Plugin.artual.claims.listeners.RaidListener;
 import org.TheoCodes.ArtualSMP.Plugin.artual.commands.ChunkCommand;
 import org.TheoCodes.ArtualSMP.Plugin.artual.commands.CompassCommand;
 import org.TheoCodes.ArtualSMP.Plugin.artual.commands.ReloadCommand;
-import org.TheoCodes.ArtualSMP.Plugin.artual.listeners.BrewListener;
-import org.TheoCodes.ArtualSMP.Plugin.artual.listeners.CompassTrackerListener;
-import org.TheoCodes.ArtualSMP.Plugin.artual.listeners.CraftListener;
-import org.TheoCodes.ArtualSMP.Plugin.artual.listeners.EnderChestDropper;
+import org.TheoCodes.ArtualSMP.Plugin.artual.listeners.*;
 import org.TheoCodes.ArtualSMP.Plugin.artual.commands.TestCommand;
 import org.TheoCodes.ArtualSMP.Plugin.artual.Artual;
 import org.bukkit.Bukkit;
@@ -45,6 +42,7 @@ public final class Artual extends JavaPlugin {
         saveConfig();
         DBHandler dbHandler = new DBHandler(this);
         dbHandler.setupDatabase();
+        new RaidListener(this).onDisable();
     }
 
     @Override
@@ -56,7 +54,6 @@ public final class Artual extends JavaPlugin {
         dbHandler.close();
 
         RaidListener raidListener = new RaidListener(this);
-        raidListener.disableMethod();
     }
 
     private void registerCommands() {
@@ -71,8 +68,8 @@ public final class Artual extends JavaPlugin {
                 new EnderChestDropper(this),
                 new CraftListener(this),
                 new EnderChestDropper(this),
-                new BrewListener(this),
-                new RaidListener(this)
+                new RaidListener(this),
+                new MineListener(this)
         ).forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
     }
 
@@ -81,11 +78,11 @@ public final class Artual extends JavaPlugin {
         return new CompassTrackerListener(this);
     }
 
-    public String color(String message) {
+    public static String color(String message) {
         return translateHexColorCodes(ChatColor.translateAlternateColorCodes('&', message));
     }
 
-    public String translateHexColorCodes(String message) {
+    public static String translateHexColorCodes(String message) {
         Matcher matcher = HEX_PATTERN.matcher(message);
         StringBuffer buffer = new StringBuffer(message.length() + 32);
         while (matcher.find()) {
