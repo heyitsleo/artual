@@ -31,7 +31,7 @@ public final class Artual extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Bukkit.getLogger().info(ChatColor.GREEN + "(✔) Enabling ArtualSMP+ by prodtheo & Harfull");
+        Bukkit.getLogger().info(ChatColor.YELLOW + "(✔) Enabling ArtualSMP+ by prodtheo & Harfull");
 
         registerEvents();
         registerCommands();
