@@ -10,6 +10,7 @@ tracker:
   max-distance: 500 # The max distance the compass should work.
   point-to-target: true # Whether the compass should point to the target rather than just showing the distance.
   update-interval: 1 # The interval in seconds to update the compass.
+  text: '&c%target% &8| &c%distance% &7blocks'
 
 ancient-debris:
   enabled: true

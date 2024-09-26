@@ -125,10 +125,10 @@ public class CompassTrackerListener implements Listener {
             if (p.equals(player)) continue;
 
             Location otherLocation = p.getLocation();
-            double distanceSquared = playerLocation.distanceSquared(otherLocation);
+            double distance = playerLocation.distance(otherLocation);
 
-            if (distanceSquared < minDistanceSquared) {
-                minDistanceSquared = distanceSquared;
+            if (distance < minDistanceSquared) {
+                minDistanceSquared = distance;
                 nearestPlayer = p;
             }
         }

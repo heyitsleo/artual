@@ -72,7 +72,8 @@ public final class Artual extends JavaPlugin {
                 new CraftListener(this),
                 new EnderChestDropper(this),
                 new BrewListener(this),
-                new RaidListener(this)
+                new RaidListener(this),
+                new CompassTrackerListener(this)
         ).forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
     }
 
