@@ -4,38 +4,21 @@
 
 enderchest:
   drop-on-death: true # Whether to drop the enderchest on death
-  drop-on-pvp: true   # Whether to drop the enderchest if PvP
+  drop-on-pvp: false  # Whether to drop the enderchest only if the killer was a player.
 
 tracker:
   max-distance: 500 # The max distance the compass should work.
-  point-to-target: true # Whether the compass should point to the target rather than just showing the distance.
   update-interval: 1 # The interval in seconds to update the compass.
-  text: '&c%target% &8| &c%distance% &7blocks' # The action bar text when tracking a player.
 
 ancient-debris:
   enabled: true
   minimum-scrap: 1
   maximum-scrap: 3
 
+combat:
+  enabled: true
+  duration: 25 # In seconds
+
 double-gaps: true # Whether to allow double gaps crafting.
 
 extended-t2-strength: false
-
-
-# ===============================
-#     Database Configuration
-# ===============================
-Database:
-  Database-Type: SQLite   # Choose between SQLite, MySQL, or MongoDB
-  MySQL:                  # If using MySQL
-    host: localhost       # MySQL server host
-    user: root            # MySQL user
-    password: ''          # MySQL password
-    database: claims      # MySQL database name
-    port: 3306            # MySQL port
-    max-pool: 15          # Max connection pool size
-    use-ssl: false        # Whether to use SSL for MySQL connections
-  MongoDB:                # If using MongoDB
-    uri: mongodb+srv://<username>:<password>@<cluster-url>/<database>?retryWrites=true&w=majority # MongoDB connection URI
-    database: claims # MongoDB database name
-    collection: data # MongoDB collection name

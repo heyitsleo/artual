@@ -9,11 +9,22 @@ import org.TheoCodes.ArtualSMP.Plugin.artual.commands.ReloadCommand;
 import org.TheoCodes.ArtualSMP.Plugin.artual.listeners.*;
 import org.TheoCodes.ArtualSMP.Plugin.artual.commands.TestCommand;
 import org.TheoCodes.ArtualSMP.Plugin.artual.Artual;
+import org.TheoCodes.ArtualSMP.Plugin.artual.util.CombatLog;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 
 import javax.swing.*;
 import java.io.File;
@@ -32,6 +43,7 @@ public final class Artual extends JavaPlugin {
 
         registerEvents();
         registerCommands();
+        registerRecipes();
 
         // Ensure the plugin data folder exists
         if (!getDataFolder().exists()) {
@@ -69,10 +81,58 @@ public final class Artual extends JavaPlugin {
                 new CraftListener(this),
                 new EnderChestDropper(this),
                 new RaidListener(this),
-                new MineListener(this)
+                new MineListener(this),
+                new CombatLog(this),
+                new AntiEctasy(this)
         ).forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
     }
 
+    public void registerRecipes() {
+        registerSplashStrength();
+        registerNormalStrength();
+    }
+
+    private void registerSplashStrength() {
+        Bukkit.removeRecipe(new NamespacedKey(this, "splash_extended_strength"));
+        NamespacedKey key = new NamespacedKey(this, "splash_extended_strength");
+        ItemStack result = new ItemStack(Material.SPLASH_POTION);
+        PotionMeta resultMeta = (PotionMeta) result.getItemMeta();
+        assert resultMeta != null;
+        resultMeta.setBasePotionType(PotionType.THICK);
+        resultMeta.addCustomEffect(new PotionEffect(PotionEffectType.STRENGTH, 9600, 1), true);
+        resultMeta.setDisplayName("§fSplash Potion of Strength");
+        result.setItemMeta(resultMeta);
+        ShapelessRecipe recipe = new ShapelessRecipe(key, result);
+        ItemStack ingredient = new ItemStack(Material.SPLASH_POTION);
+        PotionMeta ingredientMeta = (PotionMeta) ingredient.getItemMeta();
+        assert ingredientMeta != null;
+        ingredientMeta.setBasePotionData(new PotionData(PotionType.STRENGTH, false, true));
+        ingredient.setItemMeta(ingredientMeta);
+        recipe.addIngredient(new RecipeChoice.ExactChoice(ingredient));
+        recipe.addIngredient(Material.REDSTONE);
+        Bukkit.addRecipe(recipe);
+    }
+
+    private void registerNormalStrength() {
+        Bukkit.removeRecipe(new NamespacedKey(this, "normal_extended_strength"));
+        NamespacedKey key = new NamespacedKey(this, "normal_extended_strength");
+        ItemStack result = new ItemStack(Material.POTION);
+        PotionMeta resultMeta = (PotionMeta) result.getItemMeta();
+        assert resultMeta != null;
+        resultMeta.setBasePotionType(PotionType.THICK);
+        resultMeta.addCustomEffect(new PotionEffect(PotionEffectType.STRENGTH, 9600, 1), true);
+        resultMeta.setDisplayName("§fPotion of Strength");
+        result.setItemMeta(resultMeta);
+        ShapelessRecipe recipe = new ShapelessRecipe(key, result);
+        ItemStack ingredient = new ItemStack(Material.POTION);
+        PotionMeta ingredientMeta = (PotionMeta) ingredient.getItemMeta();
+        assert ingredientMeta != null;
+        ingredientMeta.setBasePotionData(new PotionData(PotionType.STRENGTH, false, true));
+        ingredient.setItemMeta(ingredientMeta);
+        recipe.addIngredient(new RecipeChoice.ExactChoice(ingredient));
+        recipe.addIngredient(Material.REDSTONE);
+        Bukkit.addRecipe(recipe);
+    }
 
     public CompassTrackerListener getCompassTrackerListener() {
         return new CompassTrackerListener(this);
@@ -90,5 +150,5 @@ public final class Artual extends JavaPlugin {
             matcher.appendReplacement(buffer, "§x§" + group.charAt(0) + '§' + group.charAt(1) + '§' + group.charAt(2) + '§' + group.charAt(3) + '§' + group.charAt(4) + '§' + group.charAt(5));
         }
         return matcher.appendTail(buffer).toString();
-    } // last test of pro plugin
+    }
 }

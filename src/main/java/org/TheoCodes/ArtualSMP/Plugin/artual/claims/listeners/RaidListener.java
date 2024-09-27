@@ -13,6 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,6 +35,7 @@ public class RaidListener implements Listener {
 
     private final Map<Location, BlockState> breakingBlocks = new HashMap<>();
     private final Map<Location, UUID> breakingPlayers = new HashMap<>();
+    private static final Map<Location, Chunk> placedDuringRaid = new HashMap<>();
     private static final Map<UUID, RaidStatus> raids = new HashMap<>();
     private static final Map<UUID, Long> lastRaidActivity = new HashMap<>();
     private static final Map<UUID, BossBar> raidBossBars = new HashMap<>();
@@ -68,8 +71,8 @@ public class RaidListener implements Listener {
         breakingPlayers.entrySet().removeIf(entry -> {
             if (entry.getValue().equals(player.getUniqueId())) {
                 revertBlock(entry.getKey().getBlock());
-                player.removePotionEffect(PotionEffectType.FAST_DIGGING);
-                player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
+                player.removePotionEffect(PotionEffectType.HASTE);
+                player.removePotionEffect(PotionEffectType.MINING_FATIGUE);
                 return true;
             }
             return false;
@@ -99,10 +102,12 @@ public class RaidListener implements Listener {
 
         UUID ownerUUID = getOwnerUUID(claimOwner, offlineClaimOwner);
 
+        if (placedDuringRaid.containsKey(block.getLocation()) && raids.containsKey(claimManager.getClaimOwner(block.getChunk()).getUniqueId())) return;
+
         if (ownerUUID == null || ownerUUID.equals(player.getUniqueId())) return;
 
         if (shouldPreventDamage(block, event, offlineClaimOwner, ownerUUID, player)) return;
-
+        
         if (claimManager.isBlockInClaimedChunk(block) && !claimManager.doesPlayerOwnChunk(player, block.getChunk()) &&
                 !breakingBlocks.containsKey(block.getLocation())) {
             breakingBlocks.put(block.getLocation(), block.getState());
@@ -122,7 +127,7 @@ public class RaidListener implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         if (event.getBlock().getType() == Material.HONEY_BLOCK) event.setDropItems(false);
-        if (event.getBlock().getType() == Material.DEEPSLATE) event.setDropItems(false);
+        if (event.getBlock().getType() == Material.REINFORCED_DEEPSLATE) event.setDropItems(false);
 
         Block block = event.getBlock();
         Location loc = block.getLocation();
@@ -131,12 +136,15 @@ public class RaidListener implements Listener {
 
         UUID ownerUUID = getOwnerUUID(claimOwner, offlineClaimOwner);
 
+        if (placedDuringRaid.containsKey(block.getLocation()) && raids.containsKey(claimManager.getClaimOwner(block.getChunk()).getUniqueId())) {
+            placedDuringRaid.remove(block.getLocation());
+            return;
+        }
+
         if (ownerUUID == null || ownerUUID.equals(event.getPlayer().getUniqueId())) return;
 
-        Bukkit.broadcastMessage(String.valueOf(block.getType()));
-
         if (event.getBlock().getType() != Material.HONEY_BLOCK) event.setCancelled(true);
-        if (event.getBlock().getType() != Material.DEEPSLATE) event.setCancelled(true);
+        if (event.getBlock().getType() != Material.REINFORCED_DEEPSLATE) event.setCancelled(true);
 
         if (breakingBlocks.containsKey(loc) && breakingPlayers.get(loc).equals(event.getPlayer().getUniqueId())) {
             handleBlockBreak(event, ownerUUID, claimOwner, offlineClaimOwner);
@@ -149,12 +157,18 @@ public class RaidListener implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        Player player = event.getPlayer();
-        if (claimManager.isBlockInClaimedChunk(event.getBlock()) &&
-                claimManager.doesPlayerOwnChunk(player, event.getBlock().getChunk()) &&
-                raids.containsKey(player.getUniqueId()) && raids.get(player.getUniqueId()) == RaidStatus.RAIDING) {
+        Player claimowner = claimManager.getClaimOwner(event.getBlock().getChunk());
+        assert claimowner != null;
+        if (raids.containsKey(claimowner.getUniqueId())) {
+            placedDuringRaid.put(event.getBlock().getLocation(), event.getBlock().getChunk());
+        }
+    }
+
+    @EventHandler
+    public void onConsume(PlayerItemConsumeEvent event) {
+        if (event.getItem().getType() == Material.CHORUS_FRUIT && claimManager.isPlayerNearClaim(event.getPlayer())) {
             event.setCancelled(true);
-            player.sendMessage("§c(✘) You cannot place blocks in your claim while being raided!");
+            event.getPlayer().sendMessage("§c(✘) You cannot use that near a claimed chunk!");
         }
     }
 
@@ -261,7 +275,7 @@ public class RaidListener implements Listener {
             breakingPlayers.put(block.getLocation(), player.getUniqueId());
 
             block.setType(Material.BEDROCK);
-            applyEffect(player, PotionEffectType.SLOW_DIGGING, 255);
+            applyEffect(player, PotionEffectType.MINING_FATIGUE, 255);
             player.sendMessage("§c(✘) The claim owner is not online.");
             return true;
         }
@@ -271,13 +285,12 @@ public class RaidListener implements Listener {
     private void handleRaidEffects(Block block, Player player, UUID ownerUUID) {
         if (raids.containsKey(ownerUUID) && raids.get(ownerUUID) == RaidStatus.RAIDING) {
             block.setType(Material.HONEYCOMB_BLOCK);
-            applyEffect(player, PotionEffectType.SLOW_DIGGING, 1);
+            applyEffect(player, PotionEffectType.MINING_FATIGUE, 1);
         } else {
-            block.setType(Material.DEEPSLATE);
-            applyEffect(player, PotionEffectType.FAST_DIGGING, 0);
+            block.setType(Material.REINFORCED_DEEPSLATE);
+            applyEffect(player, PotionEffectType.HASTE, 0);
         }
         lastRaidActivity.put(ownerUUID, System.currentTimeMillis());
-        createOrUpdateBossBar(ownerUUID, claimManager.getClaimOwner(block.getChunk()));
     }
 
     private void handleBlockBreak(BlockBreakEvent event, UUID ownerUUID, Player claimOwner, OfflinePlayer offlineClaimOwner) {

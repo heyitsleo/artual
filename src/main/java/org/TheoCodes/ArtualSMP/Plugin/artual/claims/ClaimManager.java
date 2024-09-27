@@ -97,4 +97,25 @@ public class ClaimManager {
         }
         return null;
     }
+
+    public boolean isPlayerNearClaim(Player player) {
+
+        Chunk currentChunk = player.getLocation().getChunk();
+
+        int currentChunkX = currentChunk.getX();
+        int currentChunkZ = currentChunk.getZ();
+
+        for (int x = -2; x <= 2; x++) {
+            for (int z = -2; z <= 2; z++) {
+                Chunk neighborChunk = currentChunk.getWorld().getChunkAt(currentChunkX + x, currentChunkZ + z);
+                String neighborChunkID = getChunkID(neighborChunk);
+
+                if (isClaimed(neighborChunkID) && !doesPlayerOwnChunk(player, neighborChunk)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }
