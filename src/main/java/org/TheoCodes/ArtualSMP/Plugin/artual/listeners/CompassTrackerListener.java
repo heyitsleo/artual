@@ -62,8 +62,8 @@ public class CompassTrackerListener implements Listener {
         ShapedRecipe compassRecipe = new ShapedRecipe(recipeKey, compass);
         compassRecipe.shape(" D ", "DRD", " D ");  // Crafting shape with air in between
 
-        // Set ingredients: D (diamond block), R (redstone block)
-        compassRecipe.setIngredient('D', Material.DIAMOND_BLOCK);  // Diamond block
+        // Set ingredients: D (diamond NOT BLOCK), R (redstone block)
+        compassRecipe.setIngredient('D', Material.DIAMOND);  // Diamond
         compassRecipe.setIngredient('R', Material.REDSTONE_BLOCK);  // Redstone block
 
         // Register the recipe
@@ -96,7 +96,7 @@ public class CompassTrackerListener implements Listener {
                 Player nearestPlayer = findNearestPlayer(player);
                 double maxDistance = plugin.getConfig().getInt("tracker.max-distance");
                 if (nearestPlayer != null) {
-                    double distance = player.getLocation().distanceSquared(nearestPlayer.getLocation());
+                    double distance = player.getLocation().distance(nearestPlayer.getLocation());
                     if (distance > maxDistance) {
                         String message = ChatColor.translateAlternateColorCodes('&', "&cNo players nearby.");
                         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
@@ -125,10 +125,10 @@ public class CompassTrackerListener implements Listener {
             if (p.equals(player)) continue;
 
             Location otherLocation = p.getLocation();
-            double distanceSquared = playerLocation.distanceSquared(otherLocation);
+            double distance = playerLocation.distance(otherLocation);
 
-            if (distanceSquared < minDistanceSquared) {
-                minDistanceSquared = distanceSquared;
+            if (distance < minDistanceSquared) {
+                minDistanceSquared = distance;
                 nearestPlayer = p;
             }
         }
