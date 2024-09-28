@@ -3,13 +3,9 @@ package org.TheoCodes.ArtualSMP.Plugin.artual;
 import org.TheoCodes.ArtualSMP.Plugin.artual.claims.database.DBHandler;
 import org.TheoCodes.ArtualSMP.Plugin.artual.claims.database.DBManager;
 import org.TheoCodes.ArtualSMP.Plugin.artual.claims.listeners.RaidListener;
-import org.TheoCodes.ArtualSMP.Plugin.artual.commands.ChunkCommand;
-import org.TheoCodes.ArtualSMP.Plugin.artual.commands.CompassCommand;
-import org.TheoCodes.ArtualSMP.Plugin.artual.commands.ReloadCommand;
+import org.TheoCodes.ArtualSMP.Plugin.artual.commands.*;
 import org.TheoCodes.ArtualSMP.Plugin.artual.listeners.*;
-import org.TheoCodes.ArtualSMP.Plugin.artual.commands.TestCommand;
 import org.TheoCodes.ArtualSMP.Plugin.artual.Artual;
-import org.TheoCodes.ArtualSMP.Plugin.artual.util.CombatLog;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
@@ -82,7 +78,6 @@ public final class Artual extends JavaPlugin {
                 new EnderChestDropper(this),
                 new RaidListener(this),
                 new MineListener(this),
-                new CombatLog(this),
                 new AntiEctasy(this)
         ).forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
     }

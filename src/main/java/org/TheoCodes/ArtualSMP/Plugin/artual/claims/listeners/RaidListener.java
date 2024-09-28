@@ -107,6 +107,8 @@ public class RaidListener implements Listener {
         if (ownerUUID == null || ownerUUID.equals(player.getUniqueId())) return;
 
         if (shouldPreventDamage(block, event, offlineClaimOwner, ownerUUID, player)) return;
+
+        if (block.getType().getHardness() < 0) return;
         
         if (claimManager.isBlockInClaimedChunk(block) && !claimManager.doesPlayerOwnChunk(player, block.getChunk()) &&
                 !breakingBlocks.containsKey(block.getLocation())) {
@@ -159,7 +161,7 @@ public class RaidListener implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         Player claimowner = claimManager.getClaimOwner(event.getBlock().getChunk());
         assert claimowner != null;
-        if (raids.containsKey(claimowner.getUniqueId())) {
+        if (claimowner != null && raids.containsKey(claimowner.getUniqueId())) {
             placedDuringRaid.put(event.getBlock().getLocation(), event.getBlock().getChunk());
         }
     }

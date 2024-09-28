@@ -20,6 +20,7 @@ commands:
     description: (PLAYER) Use the chunk claiming tools.
     usage: /chunk <claim|delete|list|info>
 
+
 permissions:
   artual.reload:
     description: Lets the user with the permission reload the config.yml

@@ -15,10 +15,6 @@ ancient-debris:
   minimum-scrap: 1
   maximum-scrap: 3
 
-combat:
-  enabled: true
-  duration: 25 # In seconds
-
 double-gaps: true # Whether to allow double gaps crafting.
 
 extended-t2-strength: false
