@@ -35,7 +35,7 @@ public final class Artual extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Bukkit.getLogger().info(ChatColor.GREEN + "(✔) Enabling ArtualSMP+ by prodtheo & Harfull");
+        Bukkit.getLogger().info(ChatColor.YELLOW + "(✔) Enabling ArtualSMP+ by prodtheo & Harfull");
 
         registerEvents();
         registerCommands();
@@ -78,7 +78,8 @@ public final class Artual extends JavaPlugin {
                 new EnderChestDropper(this),
                 new RaidListener(this),
                 new MineListener(this),
-                new AntiEctasy(this)
+                new AntiEctasy(this),
+                new CompassTrackerListener(this)
         ).forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
     }
 
@@ -128,10 +129,7 @@ public final class Artual extends JavaPlugin {
         recipe.addIngredient(Material.REDSTONE);
         Bukkit.addRecipe(recipe);
     }
-
-    public CompassTrackerListener getCompassTrackerListener() {
-        return new CompassTrackerListener(this);
-    }
+    ;
 
     public static String color(String message) {
         return translateHexColorCodes(ChatColor.translateAlternateColorCodes('&', message));
