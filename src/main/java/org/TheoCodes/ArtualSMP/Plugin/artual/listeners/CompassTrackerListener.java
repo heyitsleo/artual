@@ -22,7 +22,7 @@ public class CompassTrackerListener implements Listener {
 
     public CompassTrackerListener(Plugin plugin) {
         this.plugin = plugin;
-        registerCompassRecipe();  // Register the crafting recipe when this listener is initialized
+        registerCompassRecipe();
     }
 
     @EventHandler
@@ -94,20 +94,8 @@ public class CompassTrackerListener implements Listener {
                 }
 
                 Player nearestPlayer = findNearestPlayer(player);
-                double maxDistance = plugin.getConfig().getInt("tracker.max-distance");
                 if (nearestPlayer != null) {
-                    double distance = player.getLocation().distance(nearestPlayer.getLocation());
-                    if (distance > maxDistance) {
-                        String message = ChatColor.translateAlternateColorCodes('&', "&cNo players nearby.");
-                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
-                        return;
-                    }
-                    int rounded = (int) (Math.round(distance * 100.0) / 100.0);
-                    String message = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("tracker.text", "&6%target% &8| &6%distance%&7 blocks away.")).replace("%target%", nearestPlayer.getName()).replace("%distance%", String.valueOf(rounded));
-                    if (plugin.getConfig().getBoolean("tracker.point-to-target", true)) {
-                        player.setCompassTarget(nearestPlayer.getLocation());
-                    }
-                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                    player.setCompassTarget(nearestPlayer.getLocation());
                 } else {
                     String message = ChatColor.translateAlternateColorCodes('&', "&cNo players nearby.");
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
