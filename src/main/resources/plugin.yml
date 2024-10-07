@@ -6,7 +6,7 @@ authors: [ prodtheo, Harfull, ChatGPT ]
 description: Private plugin powering ArtualCM's SMP.
 
 commands:
-  test:
+  gold:
     description: (DEV) Test the functionality of the plugin.
     usage: /test
   getcompass:

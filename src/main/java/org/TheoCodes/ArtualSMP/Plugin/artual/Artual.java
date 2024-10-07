@@ -60,8 +60,6 @@ public final class Artual extends JavaPlugin {
 
         DBHandler dbHandler = new DBHandler(this);
         dbHandler.close();
-
-        RaidListener raidListener = new RaidListener(this);
     }
 
     private void registerCommands() {
@@ -79,7 +77,8 @@ public final class Artual extends JavaPlugin {
                 new RaidListener(this),
                 new MineListener(this),
                 new AntiEctasy(this),
-                new CompassTrackerListener(this)
+                new CompassTrackerListener(this),
+                new PlayerJoinListener(this)
         ).forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
     }
 

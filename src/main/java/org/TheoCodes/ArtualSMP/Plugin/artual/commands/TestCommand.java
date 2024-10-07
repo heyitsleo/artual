@@ -2,10 +2,12 @@ package org.TheoCodes.ArtualSMP.Plugin.artual.commands;
 
 import org.TheoCodes.ArtualSMP.Plugin.artual.Artual;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 // Test command, if this works you broke something
 
@@ -15,7 +17,7 @@ public class TestCommand implements CommandExecutor {
 
     public TestCommand(Artual plugin){
         this.plugin = plugin;
-        plugin.getCommand("test").setExecutor(this);
+        plugin.getCommand("gold").setExecutor(this);
     }
 
     @Override
@@ -27,11 +29,12 @@ public class TestCommand implements CommandExecutor {
 
         Player p = (Player) sender;
 
-        if (p.hasPermission("artual.test")){  // Corrected permission check
-            p.sendMessage(ChatColor.GREEN + "(✔) Registered this command as working.");
+        if (p.hasPermission("artual.gold")){
+            p.sendMessage(ChatColor.GREEN + "(✔) Here is your free gold!");
+            p.getInventory().addItem(new ItemStack(Material.GOLD_BLOCK, 1));
             return true;
         } else {
-            p.sendMessage(ChatColor.RED + "(✘) You lack permissions to use this command.");  // Corrected message
+            p.sendMessage(ChatColor.RED + "(✘) You lack permissions to use this command.");
         }
         return false;
     }

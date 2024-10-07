@@ -28,7 +28,7 @@ public class DBHandler {
             dataFolder.mkdirs();
         }
 
-        File dbFile = new File(dataFolder, "claimsData.db");
+        File dbFile = new File(dataFolder, "data.db");
 
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl("jdbc:sqlite:" + dbFile.getAbsolutePath());
@@ -43,6 +43,10 @@ public class DBHandler {
                     "ID TEXT PRIMARY KEY, " +
                     "OwnerUUID TEXT, " +
                     "ChunkID TEXT)");
+            conn.createStatement().execute("CREATE TABLE IF NOT EXISTS Trusts (" +
+                    "OwnerUUID TEXT, " +
+                    "TrustedUUID TEXT, " +
+                    "PRIMARY KEY (OwnerUUID, TrustedUUID))");
             conn.createStatement().execute("CREATE INDEX IF NOT EXISTS idx_owner_uuid ON Claims(OwnerUUID)");
         } catch (SQLException e) {
             plugin.getLogger().severe("Failed to set up SQLite database: " + e.getMessage());

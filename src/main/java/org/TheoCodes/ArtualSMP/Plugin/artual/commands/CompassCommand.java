@@ -28,7 +28,7 @@ public class CompassCommand implements CommandExecutor {
             Player player = (Player) sender;
 
             if (player.hasPermission("artual.getcompass")) {
-                ItemStack compass = compassTrackerListener.compassItem();
+                ItemStack compass = compassTrackerListener.createCompassItem();
                 player.getInventory().addItem(compass);
 
                 player.sendMessage(ChatColor.GREEN + "(✔) Gave you a tracking compass!"); // Send a verified message
