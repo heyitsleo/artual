@@ -65,7 +65,6 @@ public final class Artual extends JavaPlugin {
     private void registerCommands() {
         new CompassCommand(this);
         new ReloadCommand(this);
-        new TestCommand(this);
         new ChunkCommand(this);
     }
 

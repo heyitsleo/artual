@@ -7,7 +7,9 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -37,7 +39,7 @@ public class CompassTrackerListener implements Listener {
             public void run() {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     if (hasTrackerCompass(player)) {
-                        updateTracking(player);
+                        updateTracking(player, Objects.requireNonNull(getTrackerCompass(player)));
                     }
                 }
             }
@@ -51,6 +53,16 @@ public class CompassTrackerListener implements Listener {
                         .filter(Objects::nonNull)
                         .anyMatch(this::isTrackerCompass);
     }
+
+    private ItemStack getTrackerCompass(Player player) {
+        for (ItemStack item : player.getInventory().getContents()) {
+            if (item != null && isTrackerCompass(item)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
 
     private boolean isTrackerCompass(ItemStack item) {
         return item.getType() == Material.COMPASS &&
@@ -72,10 +84,9 @@ public class CompassTrackerListener implements Listener {
     }
 
     private void registerCompassRecipe() {
-        NamespacedKey recipeKey = new NamespacedKey(plugin, "player_tracker_compass");
-        Bukkit.removeRecipe(recipeKey);
+        Bukkit.removeRecipe(trackerKey);
 
-        ShapedRecipe compassRecipe = new ShapedRecipe(recipeKey, createCompassItem());
+        ShapedRecipe compassRecipe = new ShapedRecipe(trackerKey, createCompassItem());
         compassRecipe.shape(" D ", "DRD", " D ");
         compassRecipe.setIngredient('D', Material.DIAMOND);
         compassRecipe.setIngredient('R', Material.REDSTONE_BLOCK);
@@ -83,12 +94,19 @@ public class CompassTrackerListener implements Listener {
         Bukkit.addRecipe(compassRecipe);
     }
 
-    private void updateTracking(Player player) {
+    private void updateTracking(Player player, ItemStack compass) {
+        if (compass.getType() != Material.COMPASS) return;
+        CompassMeta meta = (CompassMeta) compass.getItemMeta();
+        assert meta != null;
         Player nearestPlayer = findNearestPlayer(player);
         if (nearestPlayer != null) {
-            player.setCompassTarget(nearestPlayer.getLocation());
+            meta.setLodestone(nearestPlayer.getLocation());
+            meta.setLodestoneTracked(false);
+            compass.setItemMeta(meta);
         } else {
-            player.setCompassTarget(player.getWorld().getSpawnLocation());
+            meta.setLodestone(player.getLocation());
+            meta.setLodestoneTracked(false);
+            compass.setItemMeta(meta);
             sendActionBar(player, ChatColor.RED + "No players nearby");
         }
     }
@@ -98,7 +116,7 @@ public class CompassTrackerListener implements Listener {
         World playerWorld = player.getWorld();
 
         return Bukkit.getOnlinePlayers().stream()
-                .filter(p -> !p.equals(player) && p.getWorld().equals(playerWorld))
+                .filter(p -> !p.equals(player) && p.getWorld().equals(playerWorld) && !isVanished(p))
                 .min(Comparator.comparingDouble(p -> p.getLocation().distanceSquared(playerLocation)))
                 .filter(p -> p.getLocation().distanceSquared(playerLocation) <= maxTrackingDistance * maxTrackingDistance)
                 .orElse(null);
@@ -106,5 +124,12 @@ public class CompassTrackerListener implements Listener {
 
     private void sendActionBar(Player player, String message) {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+    }
+
+    private boolean isVanished(Player player) {
+        for (MetadataValue meta : player.getMetadata("vanished")) {
+            if (meta.asBoolean()) return true;
+        }
+        return false;
     }
 }
